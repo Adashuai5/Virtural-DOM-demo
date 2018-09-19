@@ -26,12 +26,39 @@ function v(tag, children, text) {
     return new VNode(tag, children, text)
 }
 
+function patchElement(parent, newVNode, oldVNode, index = 0) {
+    if (!oldVNode) {
+        parent.appendChild(newVNode.render())
+    } else if (!newVNode) {
+        parent.removeChild(parent.childNodes[index])
+    } else if (newVNode.tag !== oldVNode.tag || newVNode.text !== oldVNode.text) {
+        parent.replaceChild(newVNode.render(), parent.childNodes[index])
+    } else {
+        for (let i = 0; i < newVNode.children.length || i < oldVNode.children.length; i++) {
+            patchElement(parent.childNodes[index], newVNode.children[i], oldVNode.children[i], i)
+
+        }
+    }
+}
+
 let vNode = v('div', [
     v('p', [
         v('span', [v('#text', 'Ada')])
     ]),
     v('span', [v('#text', 'shuai')])
 ])
-const root = document.querySelector('#root')
-root.appendChild(vNode.render())
 
+let vNode1 = v('div', [
+    v('p', [
+        v('span', [v('#text', 'Ada')])
+    ]),
+    v('span', [v('#text', 'shuai')]),
+    v('p', [v('#text', 'upload')])
+])
+const root = document.querySelector('#root')
+patchElement(root, vNode)
+// document.querySelector('.btn').onclick = function () {
+// root.appendChild(vNode1.render())}
+document.querySelector('.btn').onclick = function () {
+    patchElement(root, vNode1, vNode)
+}
