@@ -59,6 +59,12 @@ const root = document.querySelector('#root')
 patchElement(root, vNode)
 // document.querySelector('.btn').onclick = function () {
 // root.appendChild(vNode1.render())}
+var n = 0
 document.querySelector('.btn').onclick = function () {
-    patchElement(root, vNode1, vNode)
+    if (n % 2 == 0) {
+        patchElement(root, vNode1, vNode)
+    } else {
+        patchElement(root, vNode, vNode1)
+    }
+    n += 1
 }
